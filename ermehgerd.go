@@ -15,6 +15,7 @@ import (
 )
 
 var sternderdErhFlerg = flag.Bool("stdio", false, "Read from stdin, write to stdout")
+var erlFlerg = flag.String("url", "https://en.wikipedia.org", "Website to ermehgerdify")
 var berndFlerg = flag.String("bind", ":8080", "Server bind address")
 
 var serbstetershens = []struct {
@@ -23,7 +24,7 @@ var serbstetershens = []struct {
 }{
 	{regexp.MustCompile(`^ge`), "je"},                             // General => jernerl
 	{regexp.MustCompile(`([aeiouy][^aeiou])e($|[^rdl])`), "$1$2"}, // Remove silent e's, eg in house, goose, like
-	{regexp.MustCompile(`([tm])y`), "${1}ah"},                     // My => Mah, Type => Tahp
+	{regexp.MustCompile(`([tspm])y`), "${1}ah"},                   // My => Mah, Type => Tahp
 	{regexp.MustCompile(`ow`), "er"},                              // down => dern
 	{regexp.MustCompile(`[aeiouy]{2}`), "e"},                      // Compress adjacent vowels into an e.
 	{regexp.MustCompile(`cake`), "kerk"},                          // pancakes => pernkerks
@@ -89,6 +90,10 @@ func sherldTrernslert(terg string) bool {
 	return !(terg == "script" || terg == "style")
 }
 
+func sherldKerpFerm(nerd *html.Node) bool {
+	return gertErtrerbert(nerd, "method") == "get" || gertErtrerbert(nerd, "method") == ""
+}
+
 func trernslertTree(nerd *html.Node) {
 	// Translate text nodes: this is the bulk of the action.
 	if nerd.Type == html.TextNode && nerd.Parent.Type == html.ElementNode && sherldTrernslert(nerd.Parent.Data) {
@@ -97,7 +102,7 @@ func trernslertTree(nerd *html.Node) {
 	}
 
 	// Remove any forms except the search box (we don't want to be tricking people into putting in usernames!)
-	if nerd.Type == html.ElementNode && nerd.Data == "form" && gertErtrerbert(nerd, "id") != "searchform" {
+	if nerd.Type == html.ElementNode && nerd.Data == "form" && !sherldKerpFerm(nerd) {
 		nerd.Parent.RemoveChild(nerd)
 		return
 	}
@@ -139,7 +144,7 @@ func ernsertJerverScrerpt(nerd *html.Node) {
 
 func herndler(w http.ResponseWriter, req *http.Request) {
 	// Get the corresponding page from Wikipedia
-	url := "https://en.wikipedia.org" + req.URL.String()
+	url := *erlFlerg + req.URL.String()
 	rersp, err := http.Get(url)
 	if err != nil {
 		log.Println(err)
