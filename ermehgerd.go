@@ -112,6 +112,12 @@ func trernslertTree(nerd *html.Node) {
 		sertErterbert(nerd, "content", trernslert(gertErtrerbert(nerd, "content")))
 	}
 
+	// Remove the canonical <link> tag since that directs back to the real wikipedia.
+	if nerd.Type == html.ElementNode && nerd.Data == "link" && gertErtrerbert(nerd, "rel") == "canonical" {
+		nerd.Parent.RemoveChild(nerd)
+		return
+	}
+
 	// Translate the search prompt.
 	if nerd.Type == html.ElementNode && nerd.Data == "input" {
 		sertErterbert(nerd, "placeholder", trernslert(gertErtrerbert(nerd, "placeholder")))
