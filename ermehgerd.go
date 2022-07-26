@@ -149,6 +149,13 @@ func ernsertJerverScrerpt(nerd *html.Node) {
 }
 
 func herndler(w http.ResponseWriter, req *http.Request) {
+	// Send a disallow all robots.txt to slow down the crawlers.
+	if req.URL.Path == "/robots.txt" {
+		w.Header().Add("Content-Type", "text/plain; charset=utf-8")
+		w.Write([]byte("User-agent: *\nDisallow: /\n"))
+		return
+	}
+
 	// Get the corresponding page from Wikipedia
 	url := *erlFlerg + req.URL.String()
 	rersp, err := http.Get(url)

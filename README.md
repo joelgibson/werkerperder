@@ -23,3 +23,7 @@ To translate a word list in command-line mode:
 To launch a server:
 
     go run ermehgerd.go -bind localhost:1234
+
+To compile for deploying on x64 Linux:
+
+    env GOOS=linux GOARCH=amd64 go build ermehgerd.go
